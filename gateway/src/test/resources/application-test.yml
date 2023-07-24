@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: gateway-service
+  cloud:
+    consul:
+      enabled: false

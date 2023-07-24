@@ -1,0 +1,84 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: product-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://db:3306/product
+    username: user
+    password: password
+  rabbitmq:
+    host: rabbitmq
+  cloud:
+    consul:
+      host: consul
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}-${spring.cloud.client.hostname}
+        health-check-critical-timeout: 10m
+    stream:
+      source: product
+      bindings:
+        addProductOutput:
+          destination: addProduct.exchange
+        editProductOutput:
+          destination: editProduct.exchange
+        removeProductOutput:
+          destination: removeProduct.exchange
+
+server:
+  port: 0
+
+jwt:
+  secret: secret
+  prefix: 'Bearer '
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: product-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/product
+    username: user
+    password: password
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}-${spring.cloud.client.hostname}
+        health-check-critical-timeout: 10m
+    stream:
+      source: product
+      bindings:
+        addProductOutput:
+          destination: addProduct.exchange
+        editProductOutput:
+          destination: editProduct.exchange
+        removeProductOutput:
+          destination: removeProduct.exchange
+
+server:
+  port: 8903
+  error:
+    include-message: always
+
+jwt:
+  secret: secret
+  prefix: 'Bearer '

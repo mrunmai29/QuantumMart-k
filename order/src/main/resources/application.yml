@@ -1,0 +1,95 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: order-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://db:3306/orders
+    username: user
+    password: password
+  rabbitmq:
+    host: rabbitmq
+  cloud:
+    consul:
+      host: consul
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}-${spring.cloud.client.hostname}
+        health-check-critical-timeout: 10m
+    stream:
+      bindings:
+        addProduct-in-0:
+          destination: addProduct.exchange
+          group: consumer
+        editProduct-in-0:
+          destination: editProduct.exchange
+          group: consumer
+        removeProduct-in-0:
+          destination: removeProduct.exchange
+          group: consumer
+      function:
+        definition: addProduct;editProduct;removeProduct
+
+server:
+  port: 0
+
+jwt:
+  secret: secret
+  prefix: 'Bearer '
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: order-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/orders
+    username: user
+    password: password
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}-${spring.cloud.client.hostname}
+        health-check-critical-timeout: 10m
+    stream:
+      bindings:
+        addProduct-in-0:
+          destination: addProduct.exchange
+          group: consumer
+        editProduct-in-0:
+          destination: editProduct.exchange
+          group: consumer
+        removeProduct-in-0:
+          destination: removeProduct.exchange
+          group: consumer
+      function:
+        definition: addProduct;editProduct;removeProduct
+
+server:
+  port: 8904
+  error:
+    #https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.3-Release-Notes#changes-to-the-default-error-pages-content
+    include-message: always
+
+jwt:
+  secret: secret
+  prefix: 'Bearer '
+
+product-service.url: localhost:8903
