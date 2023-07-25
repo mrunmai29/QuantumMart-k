@@ -1,4 +1,4 @@
-# QuatamMart-k: E-commerce Microservices Solution
+# QuatamMart-k: E-commerce Microservices Solution 💻 
 
 QuatamMart-k is an E-commerce solution that leverages the power of Microservice architecture, utilizing Spring Boot and Spring Cloud technologies.
 
